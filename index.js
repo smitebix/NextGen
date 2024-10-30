@@ -172,6 +172,44 @@ function createTermsSection() {
     return termsSection;
 }
 
+async function handleSignup(email, password) {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+			await sendEmailVerification(user);
+			alert("Verification email sent! Please check your inbox.");
+		} catch (error) {
+			alert(error.message);
+		}
+	}
+	async function handleLogin(email, password) {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+			if (user.emailVerified) {
+				alert("Login successful!");
+				// Redirect or perform further actions
+			} else {
+				alert("Please verify your email before logging in.");
+			}
+		} catch (error) {
+			alert(error.message);
+		}
+	}
+	// Modify the form submission event to call handleSignup or handleLogin
+	document.querySelector('form').addEventListener('submit', (event) => {
+		event.preventDefault(); 
+		const email = document.querySelector('input[type="email"]').value;
+		const password = document.querySelector('input[type="password"]').value;
+
+		if (event.target.querySelector('h1').innerText === "Signup") {
+			handleSignup(email, password);
+		} else {
+			handleLogin(email, password);
+		}
+	});
+	
+
 function sendOtp(phoneNumber) {
     const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
         'size': 'invisible'
