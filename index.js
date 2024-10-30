@@ -197,16 +197,18 @@ async function handleSignup(email, password) {
 		}
 	}
 	// Modify the form submission event to call handleSignup or handleLogin
-	document.querySelector('form').addEventListener('submit', (event) => {
-		event.preventDefault(); 
-		const email = document.querySelector('input[type="email"]').value;
-		const password = document.querySelector('input[type="password"]').value;
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelector('form').addEventListener('submit', (event) => {
+			event.preventDefault(); 
+			const email = document.querySelector('input[type="email"]').value;
+			const password = document.querySelector('input[type="password"]').value;
 
-		if (event.target.querySelector('h1').innerText === "Signup") {
-			handleSignup(email, password);
-		} else {
-			handleLogin(email, password);
-		}
+			if (event.target.querySelector('h1').innerText === "Signup") {
+				handleSignup(email, password);
+			} else {
+				handleLogin(email, password);
+			}
+		});
 	});
 	
 
