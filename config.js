@@ -1,5 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+
 
  const firebaseConfig = {
   apiKey: "AIzaSyC2UiNhd20V9lKTGXT4gl7uB2NTK-ZvyNw",
@@ -15,6 +16,4 @@ import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.g
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
-// Export auth and RecaptchaVerifier for use in other modules
-export { auth, RecaptchaVerifier, signInWithPhoneNumber };
+export { auth };

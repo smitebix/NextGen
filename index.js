@@ -1,4 +1,4 @@
-import { auth, RecaptchaVerifier, signInWithPhoneNumber } from './config.js';
+import { auth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from './config.js';
 
 function createInputBox(type, placeholder, iconClass) {
     const inputBox = document.createElement("div");
@@ -62,7 +62,7 @@ function createSignupForm() {
 
     const nameInput = createInputBox("text", "Full Name", "bx bxs-user");
 
-    // Create toggle for email/mobile
+    // Toggle for email/mobile
     const toggleContainer = document.createElement("div");
     toggleContainer.className = "toggle-container";
 
@@ -72,7 +72,7 @@ function createSignupForm() {
     const toggleButton = document.createElement("button");
     toggleButton.type = "button";
     toggleButton.className = "btn toggle-btn";
-    toggleButton.innerHTML = "<i class='bx bxs-mobile'></i>"; // Default to mobile icon
+    toggleButton.innerHTML = "<i class='bx bxs-mobile'></i>";
 
     toggleButton.addEventListener("click", () => {
         if (emailInput.style.display === "none") {
@@ -86,7 +86,7 @@ function createSignupForm() {
         }
     });
 
-    // Initially set mobile input to show and email input to hide
+    // Initially show mobile input, hide email input
     mobileInput.style.display = "block";
     emailInput.style.display = "none";
     toggleContainer.append(toggleButton, emailInput, mobileInput);
@@ -96,7 +96,7 @@ function createSignupForm() {
 
     // OTP input field
     const otpInputBox = createInputBox("text", "OTP", "bx bxs-key");
-    otpInputBox.style.display = "none"; // Hide OTP input initially
+    otpInputBox.style.display = "none";
 
     // Send OTP button
     const sendOtpButton = document.createElement("button");
@@ -106,7 +106,12 @@ function createSignupForm() {
 
     sendOtpButton.addEventListener("click", () => {
         const phoneNumber = mobileInput.querySelector("input").value;
-        sendOtp(phoneNumber);
+        if (phoneNumber) {
+            sendOtp(phoneNumber);
+            otpInputBox.style.display = "block";
+        } else {
+            alert("Please enter a valid phone number.");
+        }
     });
 
     // Verify OTP button
@@ -114,7 +119,7 @@ function createSignupForm() {
     verifyOtpButton.type = "button";
     verifyOtpButton.className = "btn";
     verifyOtpButton.textContent = "Verify OTP";
-    verifyOtpButton.style.display = "none"; // Hide verify button initially
+    verifyOtpButton.style.display = "none";
 
     verifyOtpButton.addEventListener("click", () => {
         const otp = otpInputBox.querySelector("input").value;
@@ -142,102 +147,61 @@ function createSignupForm() {
     document.body.appendChild(wrapper);
 }
 
-function createRememberForgetSection() {
-    const rememberForget = document.createElement("div");
-    rememberForget.className = "remember-forget";
-
-    const rememberLabel = document.createElement("label");
-    const rememberCheckbox = document.createElement("input");
-    rememberCheckbox.type = "checkbox";
-    rememberLabel.append(rememberCheckbox, "Remember me");
-
-    const forgotPasswordLink = document.createElement("a");
-    forgotPasswordLink.href = "#";
-    forgotPasswordLink.textContent = "Forgot password?";
-
-    rememberForget.append(rememberLabel, forgotPasswordLink);
-    return rememberForget;
-}
-
-function createTermsSection() {
-    const termsSection = document.createElement("div");
-    termsSection.className = "terms";
-
-    const termsLabel = document.createElement("label");
-    const termsCheckbox = document.createElement("input");
-    termsCheckbox.type = "checkbox";
-    termsLabel.append(termsCheckbox, " I agree to the terms and conditions");
-
-    termsSection.appendChild(termsLabel);
-    return termsSection;
-}
-
 async function handleSignup(email, password) {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-			await sendEmailVerification(user);
-			alert("Verification email sent! Please check your inbox.");
-		} catch (error) {
-			alert(error.message);
-		}
-	}
-	async function handleLogin(email, password) {
+        await sendEmailVerification(user);
+        alert("Verification email sent! Please check your inbox.");
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function handleLogin(email, password) {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-			if (user.emailVerified) {
-				alert("Login successful!");
-				// Redirect or perform further actions
-			} else {
-				alert("Please verify your email before logging in.");
-			}
-		} catch (error) {
-			alert(error.message);
-		}
-	}
-	// Modify the form submission event to call handleSignup or handleLogin
-	document.addEventListener('DOMContentLoaded', () => {
-		document.querySelector('form').addEventListener('submit', (event) => {
-			event.preventDefault(); 
-			const email = document.querySelector('input[type="email"]').value;
-			const password = document.querySelector('input[type="password"]').value;
-
-			if (event.target.querySelector('h1').innerText === "Signup") {
-				handleSignup(email, password);
-			} else {
-				handleLogin(email, password);
-			}
-		});
-	});
-	
+        if (user.emailVerified) {
+            alert("Login successful!");
+        } else {
+            alert("Please verify your email before logging in.");
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+}
 
 function sendOtp(phoneNumber) {
-    const appVerifier = new RecaptchaVerifier('recaptcha-container', {
-        size: 'invisible'
-    }, auth); // Ensure `auth` is passed here
+    if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+    }
+
+    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', { size: 'invisible' }, auth);
+    const appVerifier = window.recaptchaVerifier;
 
     signInWithPhoneNumber(auth, phoneNumber, appVerifier)
         .then((confirmationResult) => {
             window.confirmationResult = confirmationResult;
-            alert('OTP has been sent to your mobile number.');
-            const otpInputBox = document.querySelector('.input-box:last-child');
-            otpInputBox.style.display = 'block';
-            document.querySelector('.btn:contains("Verify OTP")').style.display = 'block';
-        }).catch((error) => {
-            console.error('Error during OTP send:', error);
-            alert('Error sending OTP. Please try again.');
+            alert('OTP sent to your phone.');
+        })
+        .catch((error) => {
+            console.error('Error sending OTP:', error);
+            alert('Error sending OTP.');
         });
 }
 
 function verifyOtp(otp) {
+    if (!window.confirmationResult) {
+        alert("No OTP sent.");
+        return;
+    }
     window.confirmationResult.confirm(otp)
         .then((result) => {
-            const user = result.user;
             alert('Phone number verified successfully!');
         }).catch((error) => {
             console.error('Error during OTP verification:', error);
-            alert('Invalid OTP. Please try again.');
+            alert('Invalid OTP.');
         });
 }
 
