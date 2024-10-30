@@ -214,16 +214,16 @@ async function handleSignup(email, password) {
 
 function sendOtp(phoneNumber) {
     const appVerifier = new RecaptchaVerifier('recaptcha-container', {
-        'size': 'invisible'
-    }, auth);
+        size: 'invisible'
+    }, auth); // Ensure `auth` is passed here
 
-    auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+    signInWithPhoneNumber(auth, phoneNumber, appVerifier)
         .then((confirmationResult) => {
-            window.confirmationResult = confirmationResult; 
+            window.confirmationResult = confirmationResult;
             alert('OTP has been sent to your mobile number.');
-            const otpInputBox = document.querySelector('.input-box:last-child'); 
-            otpInputBox.style.display = 'block'; 
-            document.querySelector('.btn:contains("Verify OTP")').style.display = 'block'; 
+            const otpInputBox = document.querySelector('.input-box:last-child');
+            otpInputBox.style.display = 'block';
+            document.querySelector('.btn:contains("Verify OTP")').style.display = 'block';
         }).catch((error) => {
             console.error('Error during OTP send:', error);
             alert('Error sending OTP. Please try again.');
