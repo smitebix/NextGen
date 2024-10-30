@@ -12,6 +12,23 @@ function createInputBox(type, placeholder, iconClass) {
     return inputBox;
 }
 
+function createRememberForgetSection() {
+    const rememberForget = document.createElement("div");
+    rememberForget.className = "remember-forget";
+
+    const rememberLabel = document.createElement("label");
+    const rememberCheckbox = document.createElement("input");
+    rememberCheckbox.type = "checkbox";
+    rememberLabel.append(rememberCheckbox, "Remember me");
+
+    const forgotPasswordLink = document.createElement("a");
+    forgotPasswordLink.href = "#";
+    forgotPasswordLink.textContent = "Forgot password?";
+
+    rememberForget.append(rememberLabel, forgotPasswordLink);
+    return rememberForget;
+}
+
 function createFormFooter(buttonText, linkText, linkAction) {
     const footerDiv = document.createElement("div");
     const button = document.createElement("button");
