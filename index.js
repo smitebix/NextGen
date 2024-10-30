@@ -1,4 +1,4 @@
-import { auth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from './config.js';
+import { auth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, sendEmailVerification } from './config.js';
 
 function createInputBox(type, placeholder, iconClass) {
     const inputBox = document.createElement("div");

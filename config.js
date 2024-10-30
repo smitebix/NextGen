@@ -1,5 +1,5 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
 
 
  const firebaseConfig = {
@@ -16,4 +16,6 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-export { auth };
+
+// Export the required functions and auth object
+export { auth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, sendEmailVerification };
