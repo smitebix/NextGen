@@ -1,6 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
  const firebaseConfig = {
   apiKey: "AIzaSyC2UiNhd20V9lKTGXT4gl7uB2NTK-ZvyNw",
@@ -12,11 +11,10 @@ import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.g
   appId: "1:314456664907:web:ea39627889c7e65f2f16ce",
   measurementId: "G-HPZG0CKD9E"
  };
- // Initialize Firebase
-    // Initialize Firebase
+
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export { auth };
-	
-	
+// Export auth and RecaptchaVerifier for use in other modules
+export { auth, RecaptchaVerifier, signInWithPhoneNumber };
