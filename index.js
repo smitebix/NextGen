@@ -1,4 +1,4 @@
-import { auth } from './config.js';
+import { auth, RecaptchaVerifier, signInWithPhoneNumber } from './config.js';
 
 function createInputBox(type, placeholder, iconClass) {
     const inputBox = document.createElement("div");
@@ -213,9 +213,9 @@ async function handleSignup(email, password) {
 	
 
 function sendOtp(phoneNumber) {
-    const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    const appVerifier = new RecaptchaVerifier('recaptcha-container', {
         'size': 'invisible'
-    });
+    }, auth);
 
     auth.signInWithPhoneNumber(phoneNumber, appVerifier)
         .then((confirmationResult) => {
