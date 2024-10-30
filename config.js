@@ -13,9 +13,12 @@ import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.g
   measurementId: "G-HPZG0CKD9E"
  };
  // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-		
+    // Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+export { auth };
+	
 	async function handleSignup(email, password) {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -52,3 +55,4 @@ import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.g
 			handleLogin(email, password);
 		}
 	});
+	

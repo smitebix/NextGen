@@ -1,3 +1,5 @@
+import { auth } from './config.js';
+
 function createInputBox(type, placeholder, iconClass) {
     const inputBox = document.createElement("div");
     inputBox.className = "input-box";
@@ -172,16 +174,16 @@ function createTermsSection() {
 
 function sendOtp(phoneNumber) {
     const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible'
     });
 
     auth.signInWithPhoneNumber(phoneNumber, appVerifier)
         .then((confirmationResult) => {
-            
             window.confirmationResult = confirmationResult; 
             alert('OTP has been sent to your mobile number.');
-            const otpInputBox = document.querySelector('.input-box:last-child'); // Change selector as needed
-            otpInputBox.style.display = 'block'; // Show OTP input
-            document.querySelector('.btn:contains("Verify OTP")').style.display = 'block'; // Show Verify button
+            const otpInputBox = document.querySelector('.input-box:last-child'); 
+            otpInputBox.style.display = 'block'; 
+            document.querySelector('.btn:contains("Verify OTP")').style.display = 'block'; 
         }).catch((error) => {
             console.error('Error during OTP send:', error);
             alert('Error sending OTP. Please try again.');
@@ -191,7 +193,6 @@ function sendOtp(phoneNumber) {
 function verifyOtp(otp) {
     window.confirmationResult.confirm(otp)
         .then((result) => {
-            // User signed in successfully.
             const user = result.user;
             alert('Phone number verified successfully!');
         }).catch((error) => {
