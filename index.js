@@ -93,6 +93,11 @@ function createSignupForm() {
     wrapper.className = "wrapper";
     const form = document.createElement("form");
 
+	// Create recaptcha container dynamically
+    const recaptchaContainer = document.createElement("div");
+    recaptchaContainer.id = "recaptcha-container";
+    document.body.appendChild(recaptchaContainer); // Append to the body
+
     const nameInput = createInputBox("text", "Full Name", "bx bxs-user");
 
     // Toggle for email/mobile
