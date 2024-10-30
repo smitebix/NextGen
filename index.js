@@ -29,6 +29,22 @@ function createRememberForgetSection() {
     return rememberForget;
 }
 
+function createTermsSection() {
+    const termsContainer = document.createElement("div");
+    termsContainer.className = "terms-container";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "terms-checkbox";
+
+    const label = document.createElement("label");
+    label.htmlFor = "terms-checkbox";
+    label.innerHTML = "I agree to the <a href='#'>Terms and Conditions</a>";
+
+    termsContainer.append(checkbox, label);
+    return termsContainer;
+}
+
 function createFormFooter(buttonText, linkText, linkAction) {
     const footerDiv = document.createElement("div");
     const button = document.createElement("button");
